@@ -20,15 +20,11 @@ import re
 
 ## Write code to define your parse_counted_words function here.
 def parse_counted_words(x):
-    listOfPairs = re.findall('[0-9]+ [^\W]*[A-z]+', x)
-    if len(listOfPairs) != 0:
-        lastPair = listOfPairs[-1]
-        lastPair.rstrip()
-        individualWords = lastPair.split()
-        return individualWords[-2], individualWords[-1]
+    Pairs = re.findall('\d+\s.[A-z]+', x)
+    if len(Pairs) != 0:
+        return tuple(Pairs[-1].split())
     else:
-        return None
-    
+        return None    
     
 
 
@@ -41,15 +37,17 @@ def parse_counted_words(x):
 Newfile = open('computer_paths.txt')
 reading_lines = Newfile.read()
 file_list = re.findall("\.[\w]+", reading_lines)
-number_of_files = len(file_list)
+file_paths_num = len(file_list)
 ## (b) Write Python code to determine how many of these paths are FULL paths, not relative paths. Save that number in the variable full_paths_num.
-
+paths = re.findall("(/Users|~)", reading_lines)
+full_paths_num = len(paths)
 ## (c) Write Python code to determine how many of these paths describe a Python file saved inside a folder called SI206. Save that number in the variable python_course_paths.
+python_paths = re.findall("SI206/(\S+[.]py)", reading_lines)
+python_course_paths = len(python_paths)
 
 ## (d) Write Python code to determine how many of these paths describe a Microsoft file (a file that EITHER ends with .docx OR .xlsx, but nothing else counts) where the file name ends in a digit. Save that total in the variable microsoft_files_num.
-
-
-
+microsoft_paths = re.findall("/(\S+[0-9]+)(.docx|.xlsx)", reading_lines)
+microsoft_files_num = len(microsoft_paths)
 
 
 
