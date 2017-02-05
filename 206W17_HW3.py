@@ -20,8 +20,15 @@ import re
 
 ## Write code to define your parse_counted_words function here.
 def parse_counted_words(x):
-    #this dosent work
-    pass
+    listOfPairs = re.findall('[0-9]+ [^\W]*[A-z]+', x)
+    if len(listOfPairs) > 0:
+        lastPair = listOfPairs[-1]
+        individualWords = lastPair.split()
+        return individualWords[-2], individualWords[-1]
+    else:
+        return None
+    
+    
 
 
 
@@ -29,9 +36,8 @@ def parse_counted_words(x):
 
 ## We have provided a text file computer_paths.txt. It's not incredibly long -- you can scan through it, but do NOT hard code your answers! Each line contains 1 filesystem path.
 def find_files(x):
-    re.findall('/$')
-    a = b
-    pass
+
+    a = re.findall('0-9([^ ]*)',x)
 ## (a) Write Python code to determine how many of these paths identify FILES, not directories. Save that number in the variable file_paths_num.
 
 ## (b) Write Python code to determine how many of these paths are FULL paths, not relative paths. Save that number in the variable full_paths_num.
