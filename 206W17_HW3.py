@@ -21,8 +21,9 @@ import re
 ## Write code to define your parse_counted_words function here.
 def parse_counted_words(x):
     listOfPairs = re.findall('[0-9]+ [^\W]*[A-z]+', x)
-    if len(listOfPairs) > 0:
+    if len(listOfPairs) != 0:
         lastPair = listOfPairs[-1]
+        lastPair.rstrip()
         individualWords = lastPair.split()
         return individualWords[-2], individualWords[-1]
     else:
@@ -35,11 +36,12 @@ def parse_counted_words(x):
 ## PART 2: 200 points
 
 ## We have provided a text file computer_paths.txt. It's not incredibly long -- you can scan through it, but do NOT hard code your answers! Each line contains 1 filesystem path.
-def find_files(x):
 
-    a = re.findall('0-9([^ ]*)',x)
 ## (a) Write Python code to determine how many of these paths identify FILES, not directories. Save that number in the variable file_paths_num.
-
+Newfile = open('computer_paths.txt')
+reading_lines = Newfile.read()
+file_list = re.findall("\.[\w]+", reading_lines)
+number_of_files = len(file_list)
 ## (b) Write Python code to determine how many of these paths are FULL paths, not relative paths. Save that number in the variable full_paths_num.
 
 ## (c) Write Python code to determine how many of these paths describe a Python file saved inside a folder called SI206. Save that number in the variable python_course_paths.
