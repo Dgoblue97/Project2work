@@ -85,9 +85,57 @@ soup = BeautifulSoup(htmldoc,"html.parser")
 people = soup.find_all("div",{"class":"views-row"})
 umsi_titles = {}
 
-print (people)
+print (type(people))
+list_of_names = []
 for a in people:
-	if soup.find(div, {"property":"dc:title"})
+	if a.find('div', {"property":"dc:title"}):
+		Inner_var = a.find('div', {"property":"dc:title"})
+		c = Inner_var.find('h2').text
+		list_of_names.append(c)
+list_of_titles = []			
+for b in people:
+	if b.find("div", {"class": "field-name-field-person-titles"}):
+		new_var =  b.find("div", {"class": "field-name-field-person-titles"}).text
+		list_of_titles.append(new_var)
+
+
+print (list_of_titles)
+print (list_of_names)
+a = 0 
+for x in range(20):
+	umsi_titles[list_of_names[x]] = list_of_titles[x]
+	a += 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# names = soup.find_all("div", {"property":"dc:title"})
+# titles = soup.find_all("div", {"class": "field-name-field-person-titles"})
+
+# list_of_names = []
+# list_of_titles = []
+
+# for param in names:
+# 	list_of_names.append(param.text)
+# for param in titles:
+# 	list_of_titles.append(param.text)
+
+# a = 0 
+# for x in range(20):
+# 	umsi_titles[list_of_names[a]] = list_of_titles[a]
+# 	a+=1
+
+
 ## It may be helpful to translate the following from English to code:
 
 ## For each element in the list saved in the variable people,
