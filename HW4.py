@@ -147,7 +147,7 @@ for x in range(20):
 
 
 
-
+# Did it two different way but the commented out version did not iterate through the UMSI page
 
 
 
