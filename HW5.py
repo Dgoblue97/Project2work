@@ -5,8 +5,8 @@ import json
 
 ## SI 206 - W17 - HW5
 ## COMMENT WITH:
-## Your section day/time:
-## Any names of people you worked with on this assignment:
+## Your section day/time: Thursday 6:00-7:00
+## Any names of people you worked with on this assignment: N/A
 
 ######## 500 points total ########
 
