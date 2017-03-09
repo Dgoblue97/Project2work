@@ -72,10 +72,14 @@ def find_urls(input_string):
 
 
 def get_umsi_data():
+
 	list_of_SI_pages = []
 	list_of_SI_pages.append(requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All", headers={'User-Agent': 'SI_CLASS'}))
 	for a in range(1,12):
 		list_of_SI_pages.append(requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page=" + str(a), headers={'User-Agent': 'SI_CLASS'}))
+	
+
+
 	# html_response = response
 	# soup = BeautifulSoup(html_response, 'html.parser')
 
@@ -89,7 +93,26 @@ def get_umsi_data():
 
 umsi_titles = {}
 
+list_of_names = []
+for a in list_of_SI_pages:
+	if a.find('div', {"property":"dc:title"}):
+		Inner_var = a.find('div', {"property":"dc:title"})
+		c = Inner_var.find('h2').text
+		list_of_names.append(c)
+list_of_titles = []			
+for b in list_of_SI_pages:
+	if b.find("div", {"class": "field-name-field-person-titles"}):
+		new_var =  b.find("div", {"class": "field-name-field-person-titles"}).text
+		list_of_titles.append(new_var)
 
+
+print (list_of_titles)
+print (list_of_names)
+
+for x in list_of_names:
+	if a not in umsi_titles:
+		umsi_titles[list_of_names[x]] = list_of_titles[x]
+	
 
 
 
