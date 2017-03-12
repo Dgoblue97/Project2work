@@ -39,6 +39,7 @@ try:
 	cache_file = open(CACHE_FNAME,'r')
 	cache_contents = cache_file.read() 
 	CACHE_DICTION = json.loads(cache_contents)
+	cache_file.close()
 except:
 	CACHE_DICTION = {}
 
@@ -72,16 +73,22 @@ def find_urls(input_string):
 
 
 def get_umsi_data():
+	if "umsi_directory_data" in CACHE_DICTION:
+		return CACHE_DICTION["umsi_directory_data"]
+	else:
+		umsi_directory_data = []	
+		for a in range(12):
+			requests_text = requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page=" + str(a), headers={'User-Agent': 'SI_CLASS'}).text
+			umsi_directory_data.append(requests_text)
+		CACHE_DICTION['umsi_directory_data'] = umsi_directory_data
+		caching_file = open(CACHE_FNAME,'w')
+		caching_file.write(json.dumps(CACHE_DICTION))
+	return umsi_directory_data	
 
-	list_of_SI_pages = []
-	list_of_SI_pages.append(requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All", headers={'User-Agent': 'SI_CLASS'}))
-	for a in range(1,12):
-		list_of_SI_pages.append(requests.get("https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page=" + str(a), headers={'User-Agent': 'SI_CLASS'}))
 	
 
 
-	# html_response = response
-	# soup = BeautifulSoup(html_response, 'html.parser')
+
 
 
 
@@ -93,26 +100,15 @@ def get_umsi_data():
 
 umsi_titles = {}
 
-list_of_names = []
-for a in list_of_SI_pages:
-	if a.find('div', {"property":"dc:title"}):
-		Inner_var = a.find('div', {"property":"dc:title"})
-		c = Inner_var.find('h2').text
-		list_of_names.append(c)
-list_of_titles = []			
-for b in list_of_SI_pages:
-	if b.find("div", {"class": "field-name-field-person-titles"}):
-		new_var =  b.find("div", {"class": "field-name-field-person-titles"}).text
-		list_of_titles.append(new_var)
+SI_data = get_umsi_data()
+for page in SI_data:
+	soup = BeautifulSoup(page, 'html.parser')
+	SI_people = soup.find_all("div", {"class":"views-row"})
+	for a in SI_people: 	
+			names = a.find('div', {"property":"dc:title"}).text	
+			titles =  a.find("div", {"class": "field-name-field-person-titles"}).text
+			umsi_titles[names] = titles
 
-
-print (list_of_titles)
-print (list_of_names)
-
-for x in list_of_names:
-	if a not in umsi_titles:
-		umsi_titles[list_of_names[x]] = list_of_titles[x]
-	
 
 
 
@@ -123,12 +119,14 @@ for x in list_of_names:
 ## RETURN VALUE: A list of strings: A list of just the text of 5 different tweets that result from the search.
 
 def get_five_tweets(input_word):
-	unique_identifier = input_word
-	if unique_identifier in CACHE_DICTION: # if it is...
-		twitter_results = CACHE_DICTION[unique_identifier] # grab the data from the cache!
+	if "twitter_University of Michigan" not in CACHE_DICTION:
+		CACHE_DICTION["twitter_University of Michigan"] = {}
+
+	if input_word in CACHE_DICTION["twitter_University of Michigan"]:
+		twitter_results = CACHE_DICTION["twitter_University of Michigan"][input_word]
 	else:
 		twitter_results = api.search(q = input_word) # get it from the internet
-		CACHE_DICTION[unique_identifier] = twitter_results # add it to the dictionary -- new key-val pair		# and then write the whole cache dictionary, now with new info added, to the file, so it'll be there even after your program closes!
+		CACHE_DICTION["twitter_University of Michigan"][input_word] = twitter_results # add it to the dictionary -- new key-val pair		# and then write the whole cache dictionary, now with new info added, to the file, so it'll be there even after your program closes!
 		f = open(CACHE_FNAME,'w') # open the cache file for writing
 		f.write(json.dumps(CACHE_DICTION)) # make the whole dictionary holding data and unique identifiers into a json-formatted string, and write that wholllle string to a file so you'll have it next time!
 		f.close()
@@ -145,12 +143,19 @@ def get_five_tweets(input_word):
 
 
 five_tweets = get_five_tweets("University of Michigan")
+print (five_tweets)
 
 ## PART 3 (c) - Iterate over the five_tweets list, invoke the find_urls function that you defined in Part 1 on each element of the list, and accumulate a new list of each of the total URLs in all five of those tweets in a variable called tweet_urls_found. 
 
 tweet_urls_found = []
 for tweets in five_tweets:
-	tweet_urls_found.append(find_urls(tweets))
+	for url in find_urls(tweets):
+		tweet_urls_found.append(url)
+
+tweet_urls_found = tuple(tweet_urls_found)
+
+print (tweet_urls_found)
+
 
 
 
