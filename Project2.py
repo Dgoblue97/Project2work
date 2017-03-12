@@ -54,7 +54,7 @@ except:
 ## find_urls("the internet is awesome #worldwideweb") should return [], empty list
 
 def find_urls(input_string):
-	urls = re.findall(r"https?:\/\/[A-Za-z0-9]{2,}(?:\.+[a-zA-Z0-9]{2,})+", input_string)
+	urls = re.findall(r'https?://[^\s]*?\...[^\s]*', input_string)
 	return urls
 
 
@@ -147,14 +147,21 @@ print (five_tweets)
 
 ## PART 3 (c) - Iterate over the five_tweets list, invoke the find_urls function that you defined in Part 1 on each element of the list, and accumulate a new list of each of the total URLs in all five of those tweets in a variable called tweet_urls_found. 
 
-tweet_urls_found = []
+# tweet_urls_found = []
+# for tweet in five_tweets:
+# 	URLS = find_urls(tweet)
+# 	for url in URLS:
+# 		tweet_urls_found.append(url)
+
+# tweet_urls_found = tuple(tweet_urls_found)
+tweet_urls_lst = []
 for tweets in five_tweets:
 	for url in find_urls(tweets):
-		tweet_urls_found.append(url)
+		tweet_urls_lst.append(url)
 
-tweet_urls_found = tuple(tweet_urls_found)
+tweet_urls_found = tuple(tweet_urls_lst)
 
-print (tweet_urls_found)
+# print (tweet_urls_found)
 
 
 
